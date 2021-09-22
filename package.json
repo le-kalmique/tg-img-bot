@@ -1,0 +1,28 @@
+{
+  "name": "tg-img-bot",
+  "version": "1.0.0",
+  "description": "Telegram Image creation bot",
+  "main": "bot.js",
+  "dependencies": {
+    "telegraf": "^4.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/le-kalmique/tg-img-bot.git"
+  },
+  "keywords": [
+    "bot",
+    "telegram",
+    "nodejs"
+  ],
+  "author": "Renata Dzherhalova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/le-kalmique/tg-img-bot/issues"
+  },
+  "homepage": "https://github.com/le-kalmique/tg-img-bot#readme"
+}
