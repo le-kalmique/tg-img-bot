@@ -2,7 +2,7 @@
   "name": "tg-img-bot",
   "version": "1.0.0",
   "description": "Telegram Image creation bot",
-  "main": "bot.js",
+  "main": "src/bot.js",
   "dependencies": {
     "telegraf": "^4.4.2"
   },
