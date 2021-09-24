@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const bot = require('./init');
 require('./commands');
+require('./events');
 
 bot.launch();
 process.once('SIGINT', () => bot.stop('SIGINT'));
