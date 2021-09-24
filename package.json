@@ -4,11 +4,13 @@
   "description": "Telegram Image creation bot",
   "main": "src/bot.js",
   "dependencies": {
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.12",
     "telegraf": "^4.4.2"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "nodemon src/bot.js"
   },
   "repository": {
     "type": "git",
