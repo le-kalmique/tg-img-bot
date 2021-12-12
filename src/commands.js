@@ -25,6 +25,11 @@ bot.command('generate_meme', (ctx) => {
   waitingState.set(ctx.from.id, 'generateMeme');
 });
 
+bot.command('generate_sticker', (ctx) => {
+  ctx.reply('Send an image with caption');
+  waitingState.set(ctx.from.id, 'generateSticker');
+})
+
 bot.on('message', (ctx) => {
   const achievementRegEx = /\/achievement (?<text>.+)/gm;
   if (ctx.message.text && ctx.message.text.match(achievementRegEx)) {
@@ -59,45 +64,51 @@ bot.on('message', (ctx) => {
       waitingState.set(ctx.from.id, 'waiting');
       break;
     case 'generate':
-      if (!ctx.message.photo) {
-        ctx.reply('Please, provide an image with caption.');
-        break;
-      } else if (!ctx.message.caption) {
-        ctx.reply('Please, provide a caption.');
-        break;
-      } else if (ctx.message.caption > 100) {
-        ctx.reply('The caption should be 100 characters or less.');
-        break;
-      }
+      if (!checkMsgForGeneration(ctx)) break;
       const img = ctx.message.photo.pop().file_id;
       generateImageWithText(ctx, img, ctx.message.caption).then(res => {
         ctx.replyWithPhoto({ source: res });
       })
       waitingState.set(ctx.from.id, 'waiting');
       break;
+
     case 'generateMeme':
-      if (!ctx.message.photo) {
-        ctx.reply('Please, provide an image with caption.');
-        break;
-      } else if (!ctx.message.caption) {
-        ctx.reply('Please, provide a caption.');
-        break;
-      } else if (ctx.message.caption > 100) {
-        ctx.reply('The caption should be 100 characters or less.');
-        break;
-      }
+      if (!checkMsgForGeneration(ctx)) break;
       const meme = ctx.message.photo.pop().file_id;
       generateImageWithText(ctx, meme, ctx.message.caption, true).then(res => {
         ctx.replyWithPhoto({ source: res });
       })
       waitingState.set(ctx.from.id, 'waiting');
       break;
-      
+
+    case 'generateSticker':
+      if (!checkMsgForGeneration(ctx)) break;
+      const sticker = ctx.message.photo.pop().file_id;
+      generateImageWithText(ctx, sticker, ctx.message.caption).then(res => {
+        ctx.replyWithSticker({ source: res });
+      })
+      waitingState.set(ctx.from.id, 'waiting');
+      break;
+
     case 'waiting':
       ctx.reply('Pick a command');
       break;
   }
 });
+
+const checkMsgForGeneration = (ctx) => {
+  if (!ctx.message.photo) {
+    ctx.reply('Please, provide an image with caption.');
+    return false;
+  } else if (!ctx.message.caption) {
+    ctx.reply('Please, provide a caption.');
+    return false;
+  } else if (ctx.message.caption > 100) {
+    ctx.reply('The caption should be 100 characters or less.');
+    return false;
+  }
+  return true;
+};
 
 const generateImageWithText = async (ctx, imgId, text, fun = false) => {
   const fileLink = await ctx.telegram.getFileLink(imgId);
@@ -141,22 +152,22 @@ const generateImageWithText = async (ctx, imgId, text, fun = false) => {
     `;
   const svgBuffer = Buffer.from(svg);
   try {
-    const image = await sharp(imageBuffer)
-      .composite([
-        {
-          input: svgBuffer,
-          top: 0,
-          left: 0
-        },
-      ])
-      .toBuffer();
-    return image;
+    return await sharp(imageBuffer)
+        .composite([
+          {
+            input: svgBuffer,
+            top: 0,
+            left: 0
+          },
+        ])
+        .toBuffer();
   } catch (e) {
     console.error(e);
   }
   return '';
 }
 
+/** @deprecated generateImageWithTextAPI */
 const generateImageWithTextAPI = async (ctx, imgId, text) => {
   const fileLink = await ctx.telegram.getFileLink(imgId);
   const imageWidth = await getImageWidth(fileLink.href);
@@ -172,8 +183,7 @@ const generateImageWithTextAPI = async (ctx, imgId, text) => {
     textWidth = checkTextWidth(text, fontSize);
   }
 
-  const linkToGeneratedImage = `https://textoverimage.moesif.com/image?image_url=${fileLink.href}&text=${text}&y_align=bottom&x_align=center&margin=15&text_size=${fontSize}`;
-  return linkToGeneratedImage;
+  return `https://textoverimage.moesif.com/image?image_url=${fileLink.href}&text=${text}&y_align=bottom&x_align=center&margin=15&text_size=${fontSize}`;
 }
 
 const generateQuote = async (ctx) => {
@@ -204,16 +214,15 @@ const generateQuote = async (ctx) => {
   const svgBuffer = Buffer.from(svg);
 
   try {
-    const image = await sharp(quoteImage)
-      .composite([
-        {
-          input: svgBuffer,
-          top: 0,
-          left: 0
-        },
-      ])
-      .toBuffer();
-    return image;
+    return await sharp(quoteImage)
+        .composite([
+          {
+            input: svgBuffer,
+            top: 0,
+            left: 0
+          },
+        ])
+        .toBuffer();
   } catch (e) {
     console.error(e);
   }
@@ -241,16 +250,15 @@ const generateAchievement = async (text) => {
   const svgBuffer = Buffer.from(svg);
 
   try {
-    const image = await sharp(achievementImage)
-      .composite([
-        {
-          input: svgBuffer,
-          top: 0,
-          left: 0
-        },
-      ])
-      .toBuffer();
-    return image;
+    return await sharp(achievementImage)
+        .composite([
+          {
+            input: svgBuffer,
+            top: 0,
+            left: 0
+          },
+        ])
+        .toBuffer();
   } catch (e) {
     console.error(e);
   }

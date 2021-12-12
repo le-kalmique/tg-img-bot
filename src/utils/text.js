@@ -14,14 +14,14 @@ const getFontSize = (text, imgWidth, minFont, maxFont = 64) => {
     }
     font -= 2;
     width = checkTextWidth(text, font);
-  };
+  }
   return font;
 }
 
 const getLongestPhrase = (phrases) => {
   let longestPhrase = '';
   let charsNum = 0;
-  phrases.forEach((phrase, index) => {
+  phrases.forEach((phrase) => {
     if (phrase.length > charsNum) {
       charsNum = phrase.length;
       longestPhrase = phrase;
@@ -36,7 +36,7 @@ const breakText = (text, width, fontSize, xSpan) => {
   while (checkTextWidth(getLongestPhrase(newText.split('\n')), fontSize) > width) {
     wrapSize += 0.05;
     newText = wrapText(text, text.length / wrapSize);
-    if (newText == text) {
+    if (newText === text) {
       newText = text.slice(0, text.length / 2) + '\n' + text.slice(text.length / 2);
     }
   }
