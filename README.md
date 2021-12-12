@@ -1,7 +1,7 @@
 # Telegram image generation bot
 ##  Educational pet project
 ### Progress:  
-![1%](https://progress-bar.dev/1/?width=250)  
+![90%](https://progress-bar.dev/90/?width=250)  
 
 ### Goals: 
 - Generate meme images with user's text in png or webp formats
